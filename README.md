@@ -3,10 +3,15 @@ The Portfolio_201754454.html contains the entire code and visualisations. Howeve
 TABLE OF CONTENTS
 
 INTRODUCTION
+
 DATA
+
 DATA PREPROCESSING
+
 TYPES OF VISUALISATIONS
+
 CONCLUSION
+
 BIBLIOGRAPHY
 
 INTRODUCTION
@@ -21,13 +26,21 @@ Crimes dataset (Asaniczka, 2024) is a collection of official crime records repor
 TYPES OF VISUALISATIONS:
 
 Bar Plot
+
 Box Plot
+
 Line Plot
+
 Pie Chart
+
 Geospatial Plot
+
 Pair Plot
+
 Widgets
+
 Word Cloud
+
 Sankey Diagram
 
 
