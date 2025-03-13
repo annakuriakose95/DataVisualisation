@@ -1,0 +1,8 @@
+#Reading the .csv files to data frame object using pandas:
+
+df_crime = pd.read_csv('/Users/ak/Desktop/Potfolio/Crime_Data_from_2020_to_Present 4.csv')
+df_population = pd.read_csv('/Users/ak/Desktop/Potfolio/world_population_data.csv')
+df_eco = pd.read_csv('/Users/ak/Desktop/Potfolio/GlobalEcologicalFootprint_2023.csv', encoding='latin')
+df_emotions = pd.read_csv('/Users/ak/Desktop/Potfolio/emotion.csv')
+df_2017 = pd.read_csv('/Users/ak/Desktop/Potfolio/HoC-GE2017-results-by-constituency.csv')
+df_2019 = pd.read_csv('/Users/ak/Desktop/Potfolio/HoC-GE2019-results-by-constituency.csv')
