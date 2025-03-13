@@ -1,0 +1,80 @@
+#DATA PREPROCESSING
+
+  ##### CRIMES DATASET ######
+
+# Removing Duplicates
+duplicate_rows = df_crime.duplicated()
+
+# Removing nulls
+df_crime.isnull().sum()
+
+# Deleting rows with null values in specific columns
+df_crime.dropna(subset=['premise_code','premise_description','victim_sex','victim_descent'], inplace=True)
+
+# Deleting unwanted columns from the dataframe
+df_crime=df_crime.drop(['modus_operandi', 'crime_code_1','crime_code_2','crime_code_3','crime_code_4'], axis=1)
+
+# Converting 'date_reported' column to datetime format
+df_crime['date_reported'] = pd.to_datetime(df_crime['date_reported'], format='%d/%m/%Y')
+
+# Converting date_occured to datetime (Pandas.to_Datetime — Pandas 2.2.2 Documentation, n.d.)
+df_crime['date_occurred'] = pd.to_datetime(df_crime['date_occurred'], format='%d/%m/%Y %H:%M')
+
+# Deleting observations in which the victim age is 0 and only keeping victim's sex male, female, or unknown
+df_crime = df_crime[((df_crime['victim_age'] > 0) & (df_crime['victim_sex'] != '-') & (df_crime['victim_sex'] != 'H'))]
+
+# Replace victim_sex values
+df_crime['victim_sex'] = df_crime['victim_sex'].replace({'F': 'Female', 'M': 'Male', 'X': 'Unknown'})
+
+# Extracting year and month from 'date_occurred' and keeping it in separate columns 
+df_crime.loc[:, 'year'] = df_crime['date_occurred'].dt.year
+df_crime.loc[:, 'month'] = df_crime['date_occurred'].dt.month
+
+# Categorising ages to different categories
+df_crime.loc[df_crime['victim_age'] < 18, 'age_group'] = 'juvenile'
+df_crime.loc[df_crime['victim_age'].between(18,39), 'age_group'] = 'young adult'
+df_crime.loc[df_crime['victim_age'].between(40,59), 'age_group'] = 'adult'
+df_crime.loc[df_crime['victim_age'] >=60, 'age_group'] = 'old'
+
+####### Ecological Footprints Dataset ########
+
+# Correcting the column names if necessary
+df_eco.rename(columns={'Life Exectancy': 'Life Expectancy'}, inplace=True)
+
+# Assuming your DataFrame is named df and the GDP per capita column is named 'gdp_per_capita'
+df_eco['Per Capita GDP'] = df_eco['Per Capita GDP'].str.replace(r'[$,]', '', regex=True)
+
+# Replace all whitespace with NaN (Replacing Blank Values (White Space) With NaN in Pandas, n.d.)
+df_eco['Per Capita GDP'].replace(r'^\s*$', pd.NA, regex=True, inplace=True)
+df_eco['Per Capita GDP'] = df_eco['Per Capita GDP'].fillna(0)
+
+# Converting certain columns from object type to numeric
+columns_to_convert = ['Total Ecological Footprint (Consumption)', 'HDI', 'SDGi', 'Per Capita GDP', 'Total biocapacity ', 'Population (millions)', 'Life Expectancy']
+
+for column in columns_to_convert:
+    df_eco[column] = pd.to_numeric(df_eco[column], errors='coerce')   
+
+####### Emotions Dataset ########
+
+#Since in the source dataset it is given corresponding emotion of each label : sadness (0), joy (1), love (2), anger (3), fear (4).
+dict_emotion = {0:"sad", 1:"happy", 2:"love", 3:"anger", 4:"fear"}
+df_emotions['emotion'] = df_emotions['label'].map(dict_emotion)
+
+# Filter out rows with NaN values in the 'emotion' column
+df_emotions = df_emotions.dropna(subset=['emotion'])
+
+###### UK Elections #######
+
+# Define the common party columns
+party_cols_2017 = ['Con', 'Lab', 'LD', 'Green', 'SNP', 'PC', 'DUP', 'SF', 'SDLP', 'UUP', 'APNI', 'UKIP']
+party_cols_2019 = ['Con', 'Lab', 'LD', 'Green', 'SNP', 'PC', 'DUP', 'SF', 'SDLP', 'UUP', 'APNI', 'BRX']
+
+# Function to convert columns to numeric, handling errors
+def convert_to_numeric(df, columns):
+    for column in columns:
+        df[column] = pd.to_numeric(df[column], errors='coerce')
+    return df
+
+# Convert relevant columns to numeric
+df_2017 = convert_to_numeric(df_2017, party_cols_2017)
+df_2019 = convert_to_numeric(df_2019, party_cols_2019)
